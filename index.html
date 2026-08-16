@@ -52,6 +52,12 @@
     gap:4px; height:100%; padding:8px; text-align:center; color:#8a7c5c; font-size:11px; line-height:1.5;
   }
   .slot .slot-fallback b{ font-size:12.5px; color:#6b6151; font-weight:600; }
+  .photo-tag{
+    position:absolute; left:8px; bottom:8px; z-index:4;
+    background:rgba(22,20,18,0.72); color:#fff; font-size:9.5px; font-weight:600;
+    padding:4px 9px; border-radius:999px; letter-spacing:0.02em; pointer-events:none;
+    backdrop-filter:blur(2px);
+  }
 
   /* ---------- NAV ---------- */
   .nav{ display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:26px; }
@@ -190,17 +196,108 @@
   @media (max-width:380px){
     .hero h1{ font-size:clamp(30px,12vw,42px); }
   }
+
+  /* ---------- MORE WORK (tambahan slot foto) ---------- */
+  .more-work-head{ text-align:center; margin-bottom:26px; }
+  .more-work-head .script{ font-size:20px; color:var(--red); display:block; margin-bottom:4px; }
+  .more-work-head h2{ font-size:30px; margin:0; }
+  .more-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .more-item{ display:flex; flex-direction:column; gap:8px; }
+  .more-photo.slot{ border-radius:12px; aspect-ratio:1/1; box-shadow:0 10px 22px rgba(0,0,0,0.12); transition:transform 0.4s cubic-bezier(.16,.8,.24,1), box-shadow 0.4s ease; }
+  .more-photo.slot:hover{ transform:translateY(-6px); box-shadow:0 16px 30px rgba(0,0,0,0.18); }
+  .more-item .cap{ font-size:11px; color:var(--ink-soft); text-align:center; }
+  @media (max-width:680px){
+    .more-grid{ grid-template-columns:repeat(2,1fr); gap:12px; }
+    .more-work-head h2{ font-size:22px; }
+  }
+
+  /* ---------- ANIMASI SCROLL & MASUK ---------- */
+  .reveal{
+    opacity:0; transform:translateY(20px);
+    transition:opacity 0.7s cubic-bezier(.16,.8,.24,1), transform 0.7s cubic-bezier(.16,.8,.24,1);
+    transition-delay:var(--reveal-delay,0s);
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+  .reveal-stagger > *{ opacity:0; transform:translateY(16px); transition:opacity 0.6s cubic-bezier(.16,.8,.24,1), transform 0.6s cubic-bezier(.16,.8,.24,1); }
+  .reveal-stagger.in-view > *{ opacity:1; transform:translateY(0); }
+  .reveal-stagger.in-view > *:nth-child(1){ transition-delay:0.05s; }
+  .reveal-stagger.in-view > *:nth-child(2){ transition-delay:0.15s; }
+  .reveal-stagger.in-view > *:nth-child(3){ transition-delay:0.25s; }
+  .reveal-stagger.in-view > *:nth-child(4){ transition-delay:0.35s; }
+
+  @keyframes heroIn{ from{ opacity:0; transform:translateY(26px); } to{ opacity:1; transform:translateY(0); } }
+  .hero .deco-flower{ animation:heroIn 0.9s cubic-bezier(.16,.8,.24,1) both; animation-delay:0.05s; }
+  .hero .deco-scribble{ animation:heroIn 0.9s cubic-bezier(.16,.8,.24,1) both; animation-delay:0.1s; }
+  .hero .deco-word{ animation:heroIn 0.9s cubic-bezier(.16,.8,.24,1) both; animation-delay:0.15s; }
+  .hero .headline{ animation:heroIn 0.9s cubic-bezier(.16,.8,.24,1) both; animation-delay:0.2s; }
+  .hero .float-card{ animation:heroIn 0.9s cubic-bezier(.16,.8,.24,1) both; animation-delay:0.4s; }
+
+  /* ---------- HEADER BACKGROUND PHOTO ---------- */
+  .header-photo-wrap{ position:relative; overflow:hidden; }
+  .header-bg{ position:absolute; inset:0; z-index:0; }
+  .header-bg img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .header-bg .overlay{ position:absolute; inset:0; background:var(--paper); opacity:0.42; }
+  .header-photo-wrap .nav, .header-photo-wrap .hero{ position:relative; z-index:1; }
+  .header-photo-wrap .hero h1{ text-shadow:0 2px 18px rgba(0,0,0,0.08); }
+
+  /* ---------- FLOATING WA BUTTON ---------- */
+  .fab-wa{
+    position:fixed; right:22px; bottom:22px; z-index:50;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 26px rgba(185,46,46,0.4); text-decoration:none; font-size:24px;
+    transition:transform 0.25s cubic-bezier(.16,.8,.24,1), box-shadow 0.25s ease;
+  }
+  .fab-wa:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 16px 32px rgba(185,46,46,0.5); }
+  .fab-wa::before{
+    content:""; position:absolute; inset:0; border-radius:50%; background:var(--red);
+    animation:fabPulse 2.4s ease-out infinite; z-index:-1;
+  }
+  @keyframes fabPulse{ 0%{ opacity:0.55; transform:scale(1); } 100%{ opacity:0; transform:scale(1.7); } }
+
+  /* ---------- APP-LIKE INTERACTION POLISH ---------- */
+  html{ scroll-behavior:smooth; }
+  .profile-btns .btn, .badge-card, .g-close, .cta-pill{
+    transition:transform 0.25s cubic-bezier(.16,.8,.24,1), box-shadow 0.25s ease, background 0.2s ease;
+  }
+  .profile-btns .btn:hover{ transform:translateY(-2px); background:#f2efe8; }
+  .profile-btns .btn.solid:hover{ background:#a12727; }
+  .badge-card:hover{ transform:translateY(-4px); box-shadow:0 16px 30px rgba(0,0,0,0.12); }
+  .cta-pill:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,0.18); }
+  a, button, .btn, .cta-pill, .fab-wa{ outline-offset:3px; }
+  a:focus-visible, button:focus-visible, .btn:focus-visible, .cta-pill:focus-visible, .fab-wa:focus-visible{
+    outline:2.5px solid var(--red);
+  }
+
+  @media (max-width:680px){
+    .fab-wa{ width:50px; height:50px; right:16px; bottom:16px; font-size:20px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal, .reveal-stagger > *{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .hero .deco-flower, .hero .deco-scribble, .hero .deco-word, .hero .headline, .hero .float-card{ animation:none !important; }
+    .more-photo.slot{ transition:none; }
+    .fab-wa::before{ animation:none; }
+  }
 </style>
 </head>
 <body>
 
 <div class="frame">
 
+  <!-- HEADER (NAV + HERO) DENGAN BACKGROUND FOTO -->
+  <div class="header-photo-wrap">
+    <div class="header-bg">
+      <img src="header-bg.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='none';">
+      <div class="overlay"></div>
+    </div>
+    <span class="photo-tag" style="position:absolute; right:14px; top:14px; z-index:10;">header-bg.jpg</span>
+
   <!-- NAV -->
   <section class="nav">
     <div class="brand">
       <div class="brand-row">
-        <div class="logo-slot slot">
+        <div class="logo-slot slot" title="logo.png">
           <img src="logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <div class="slot-fallback" style="display:none;"><b>logo.png</b></div>
         </div>
@@ -213,7 +310,8 @@
       <div class="nav-sub">Kumpulan hasil kerja &amp; keahlian kami</div>
     </div>
     <div class="nav-right">
-      <div class="cta-pill">Hubungi <span class="dot">↗</span></div>
+      <a class="cta-pill" href="https://wa.me/6282293786539" target="_blank" rel="noopener" style="text-decoration:none;">Hubungi <span class="dot">↗</span></a>
+      <div class="tag">WA 6282293786539<br>IG @wilkaaftrsex</div>
     </div>
   </section>
 
@@ -243,12 +341,16 @@
     </div>
   </section>
 
+  </div>
+  <!-- /HEADER -->
+
   <!-- ABOUT / PROFILE -->
-  <section class="about">
+  <section class="about reveal">
     <div class="profile-card">
       <div class="profile-photo slot">
         <img src="profile.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="slot-fallback" style="display:none;"><b>profile.jpg</b>foto profil kamu<br>taruh sejajar index.html</div>
+        <span class="photo-tag">profil.jpg</span>
       </div>
       <div class="profile-meta">
         <div class="name">[Nama Kamu]</div>
@@ -273,15 +375,17 @@
   </section>
 
   <!-- GALLERY -->
-  <section class="gallery">
+  <section class="gallery reveal">
     <div class="gallery-photos">
       <div class="g-photo g1 slot">
         <img src="gallery-1.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="slot-fallback" style="display:none;"><b>gallery-1.jpg</b></div>
+        <span class="photo-tag">gallery-1.jpg</span>
       </div>
       <div class="g-photo g2 slot">
         <img src="gallery-2.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="slot-fallback" style="display:none;"><b>gallery-2.jpg</b></div>
+        <span class="photo-tag">gallery-2.jpg</span>
       </div>
       <div class="g-close">✕</div>
       <div class="g-bubble">💬</div>
@@ -293,13 +397,55 @@
       <div class="since-pill">Berkarya sejak 2020</div>
       <div class="contact-mini">
         <b>Hubungi saya</b>
-        [nomor WhatsApp] · [@akun_instagram]
+        <a href="https://wa.me/6282293786539" target="_blank" rel="noopener" style="color:inherit;">WA 6282293786539</a> · <a href="https://instagram.com/wilkaaftrsex" target="_blank" rel="noopener" style="color:inherit;">@wilkaaftrsex</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE WORK / TAMBAHAN SLOT FOTO -->
+  <section class="more-work reveal">
+    <div class="more-work-head">
+      <span class="script">galeri tambahan</span>
+      <h2 class="display">Karya Lainnya</h2>
+    </div>
+    <div class="more-grid reveal reveal-stagger">
+      <div class="more-item">
+        <div class="more-photo slot">
+          <img src="gallery-3.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="slot-fallback" style="display:none;"><b>gallery-3.jpg</b></div>
+          <span class="photo-tag">gallery-3.jpg</span>
+        </div>
+        <span class="cap">[Judul karya 3]</span>
+      </div>
+      <div class="more-item">
+        <div class="more-photo slot">
+          <img src="gallery-4.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="slot-fallback" style="display:none;"><b>gallery-4.jpg</b></div>
+          <span class="photo-tag">gallery-4.jpg</span>
+        </div>
+        <span class="cap">[Judul karya 4]</span>
+      </div>
+      <div class="more-item">
+        <div class="more-photo slot">
+          <img src="gallery-5.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="slot-fallback" style="display:none;"><b>gallery-5.jpg</b></div>
+          <span class="photo-tag">gallery-5.jpg</span>
+        </div>
+        <span class="cap">[Judul karya 5]</span>
+      </div>
+      <div class="more-item">
+        <div class="more-photo slot">
+          <img src="gallery-6.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="slot-fallback" style="display:none;"><b>gallery-6.jpg</b></div>
+          <span class="photo-tag">gallery-6.jpg</span>
+        </div>
+        <span class="cap">[Judul karya 6]</span>
       </div>
     </div>
   </section>
 
   <!-- BADGES -->
-  <section class="badges">
+  <section class="badges reveal reveal-stagger">
     <div class="badge-card">
       <div class="badge-icon">✓</div>
       <b>Kerja Rapi</b>
@@ -318,17 +464,43 @@
   </section>
 
   <!-- FOOTER -->
-  <div class="foot-bar">
+  <div class="foot-bar reveal">
     <div class="up-btn">↑</div>
     <div class="center"><b>Portofolio : PT Wilka Agentic</b><span>Lihat semua karya kami selengkapnya</span></div>
     <div class="dot2"></div>
   </div>
   <div class="foot-links">
-    <span>[@akun_instagram]</span>
+    <span><a href="https://instagram.com/wilkaaftrsex" target="_blank" rel="noopener" style="color:inherit;">@wilkaaftrsex</a></span>
     <span>Lihat semua karya →</span>
   </div>
 
 </div>
+
+<a class="fab-wa" href="https://wa.me/6282293786539" target="_blank" rel="noopener" aria-label="Chat WhatsApp">💬</a>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    function showAll(){ els.forEach(function(el){ el.classList.add('in-view'); }); }
+
+    if(!('IntersectionObserver' in window)){
+      showAll();
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el){ io.observe(el); });
+
+    /* jaring pengaman: pastikan tidak ada konten yang nyangkut transparan */
+    window.setTimeout(showAll, 1200);
+  })();
+</script>
 
 </body>
 </html>
