@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT Wilka Agentic — Portofolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F6F3;
+    --ink:#161412;
+    --ink-soft:#79726a;
+    --red:#B92E2E;
+    --line:#e4e0d8;
+    --card:#ffffff;
+    --shadow:rgba(20,18,15,0.14);
+  }
+  html{ overflow-x:hidden; }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    overflow-x:hidden;
+    background:
+      radial-gradient(circle at 10% 10%, #eceae5 0, transparent 45%),
+      radial-gradient(circle at 90% 90%, #e2ded5 0, transparent 45%),
+      #dedad0;
+    font-family:'Work Sans',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.01em; }
+  .script{ font-family:'Caveat', cursive; font-weight:700; }
+
+  .frame{
+    max-width:900px; margin:50px auto 100px; position:relative;
+    background:var(--paper);
+    border-radius:22px;
+    box-shadow:0 30px 70px var(--shadow);
+    overflow:hidden;
+  }
+  .deco-line{ position:absolute; pointer-events:none; opacity:0.5; z-index:0; }
+
+  section{ position:relative; z-index:1; padding:36px 50px; border-bottom:1px solid var(--line); }
+  section:last-child{ border-bottom:none; }
+
+  /* photo slot */
+  .slot{ position:relative; background:#eee7d8; border:1.5px dashed #c9bd9c; overflow:hidden; }
+  .slot img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .slot .slot-fallback{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px; height:100%; padding:8px; text-align:center; color:#8a7c5c; font-size:11px; line-height:1.5;
+  }
+  .slot .slot-fallback b{ font-size:12.5px; color:#6b6151; font-weight:600; }
+
+  /* ---------- NAV ---------- */
+  .nav{ display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:26px; }
+  .brand{ display:flex; flex-direction:column; }
+  .brand-row{ display:flex; align-items:center; gap:8px; }
+  .logo-slot.slot{ width:24px; height:24px; border-radius:6px; flex-shrink:0; border:1.5px dashed #c9bd9c; }
+  .logo-slot.slot .slot-fallback{ font-size:6px; padding:1px; }
+  .brand b{ font-size:14px; letter-spacing:0.02em; }
+  .brand span{ font-size:10.5px; color:var(--ink-soft); }
+  .nav-center{ text-align:center; }
+  .nav-links{ display:flex; gap:22px; font-size:12.5px; font-weight:600; flex-wrap:wrap; }
+  .nav-sub{ margin-top:8px; font-size:10.5px; color:var(--ink-soft); letter-spacing:0.06em; }
+  .nav-right{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+  .nav-right .tag{ font-size:10px; color:var(--ink-soft); text-align:right; line-height:1.4; }
+  .cta-pill{
+    display:flex; align-items:center; gap:8px; background:var(--ink); color:var(--paper);
+    padding:8px 8px 8px 16px; border-radius:999px; font-size:12px; font-weight:600;
+  }
+  .cta-pill .dot{ width:22px; height:22px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding-top:10px; padding-bottom:10px; text-align:center; position:relative; }
+  .hero .headline{ position:relative; margin:6px 0 -6px; }
+  .hero h1{ font-size:clamp(58px,11vw,120px); line-height:0.82; margin:0; }
+  .hero h1.line2{ margin-top:-0.12em; }
+  .heart-badge{
+    position:absolute; top:-10px; left:50%; transform:translate(-50%,-50%);
+    width:52px; height:52px; border-radius:50%; background:#fff; border:2px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; z-index:3; box-shadow:0 8px 18px rgba(0,0,0,0.15);
+  }
+  .float-card{
+    position:relative; z-index:2; max-width:340px; margin:20px auto 0;
+    background:var(--card); border:1.5px solid var(--ink); border-radius:20px;
+    padding:16px 22px; display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 14px 30px rgba(0,0,0,0.12);
+  }
+  .float-card .fc-item{ text-align:left; }
+  .float-card .fc-item b{ display:block; font-size:13.5px; }
+  .float-card .fc-item span{ font-size:9.5px; color:var(--ink-soft); }
+  .float-toggle{ width:20px; height:36px; border-radius:12px; background:var(--red); position:relative; }
+  .float-toggle::after{ content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#fff; }
+
+  .deco-flower{ position:absolute; left:6%; top:52%; width:70px; opacity:0.75; }
+  .deco-scribble{ position:absolute; right:8%; top:36%; width:80px; opacity:0.8; }
+  .deco-word{ position:absolute; right:6%; top:58%; font-size:24px; color:var(--ink-soft); transform:rotate(-6deg); }
+
+  /* ---------- PROFILE / ABOUT ---------- */
+  .about{ display:grid; grid-template-columns:0.85fr 1.25fr; gap:40px; }
+  .profile-card{ background:var(--card); border-radius:16px; padding:14px; box-shadow:0 14px 28px rgba(0,0,0,0.1); }
+  .profile-photo.slot{ border-radius:10px; aspect-ratio:4/5; border:1.5px dashed #c9bd9c; }
+  .profile-meta{ padding-top:12px; }
+  .profile-meta .name{ font-weight:700; font-size:14px; }
+  .profile-meta .role{ font-size:11px; color:var(--ink-soft); margin-bottom:10px; }
+  .profile-btns{ display:flex; gap:8px; margin-bottom:10px; }
+  .profile-btns .btn{ flex:1; text-align:center; font-size:11px; font-weight:600; padding:8px 0; border-radius:8px; border:1.5px solid var(--ink); }
+  .profile-btns .btn.solid{ background:var(--red); border-color:var(--red); color:#fff; }
+  .profile-stats{ display:flex; justify-content:space-between; font-size:10px; color:var(--ink-soft); }
+
+  .about-right h2{ font-size:32px; margin:0 0 10px; }
+  .about-right p{ font-size:14px; line-height:1.75; color:var(--ink-soft); margin:0 0 20px; max-width:420px; }
+  .highlight-box{ background:var(--card); border-radius:14px; padding:20px 22px; box-shadow:0 10px 22px rgba(0,0,0,0.08); }
+  .highlight-box .hb-top{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .hb-icon{ width:26px; height:26px; border-radius:50%; background:var(--red); flex-shrink:0; }
+  .highlight-box b{ font-size:14px; }
+  .highlight-box p{ font-size:12.5px; color:var(--ink-soft); line-height:1.65; margin:0 0 14px; }
+  .icon-row{ display:flex; gap:14px; color:var(--ink-soft); font-size:16px; }
+
+  /* ---------- GALLERY ---------- */
+  .gallery{ display:grid; grid-template-columns:1fr 1.15fr; gap:44px; align-items:center; }
+  .gallery-photos{ position:relative; height:280px; }
+  .g-photo{ position:absolute; border-radius:12px; box-shadow:0 20px 36px rgba(0,0,0,0.22); }
+  .g-photo.g1{ width:60%; height:88%; left:0; top:0; z-index:1; }
+  .g-photo.g2{ width:62%; height:80%; right:0; bottom:0; transform:rotate(6deg); z-index:2; border:6px solid #fff; }
+  .g-close{
+    position:absolute; top:18%; left:52%; width:34px; height:34px; border-radius:50%;
+    background:#fff; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center;
+    font-size:16px; z-index:3;
+  }
+  .g-bubble{
+    position:absolute; bottom:22%; left:38%; background:#fff; border-radius:14px 14px 14px 2px;
+    padding:6px 10px; font-size:14px; box-shadow:0 8px 16px rgba(0,0,0,0.15); z-index:3;
+  }
+  .gallery-text h2{ font-size:34px; margin:0 0 2px; }
+  .gallery-text .script{ font-size:20px; color:var(--red); display:block; margin-bottom:10px; }
+  .gallery-text p{ font-size:14px; line-height:1.75; color:var(--ink-soft); max-width:380px; margin:0 0 18px; }
+  .since-pill{ display:inline-block; padding:9px 20px; border-radius:999px; background:var(--ink); color:#fff; font-size:12px; font-weight:600; margin-bottom:18px; }
+  .contact-mini{ font-size:11px; color:var(--ink-soft); line-height:1.7; }
+  .contact-mini b{ display:block; color:var(--ink); font-size:11.5px; }
+
+  /* ---------- BADGES ---------- */
+  .badges{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .badge-card{ background:var(--card); border-radius:14px; padding:22px; box-shadow:0 10px 20px rgba(0,0,0,0.08); }
+  .badge-icon{ width:32px; height:32px; border-radius:50%; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center; margin-bottom:12px; font-size:14px; }
+  .badge-card b{ display:block; font-size:13.5px; margin-bottom:6px; }
+  .badge-card p{ font-size:11.5px; color:var(--ink-soft); line-height:1.6; margin:0; }
+
+  /* ---------- FOOTER ---------- */
+  .foot-bar{ display:flex; align-items:center; justify-content:space-between; background:var(--ink); color:var(--paper); padding:18px 40px; }
+  .foot-bar .up-btn{ width:34px; height:34px; border-radius:50%; border:1.5px solid var(--paper); display:flex; align-items:center; justify-content:center; }
+  .foot-bar .center{ text-align:center; }
+  .foot-bar .center b{ font-size:14px; }
+  .foot-bar .center span{ display:block; font-size:10px; color:#c9c3b8; margin-top:2px; }
+  .foot-bar .dot2{ width:34px; height:34px; border-radius:50%; background:var(--red); }
+
+  .foot-links{ display:flex; justify-content:space-between; padding:16px 40px; font-size:11px; color:var(--ink-soft); }
+
+  @media (max-width:680px){
+    .about, .gallery, .badges{ grid-template-columns:1fr; }
+    .nav{ flex-direction:column; gap:14px; align-items:flex-start; }
+    .nav-center, .nav-right{ align-items:flex-start; text-align:left; }
+    .nav-right{ width:100%; }
+    .deco-flower, .deco-scribble, .deco-word{ display:none; }
+
+    .frame{ margin:20px 12px 60px; border-radius:16px; }
+    section{ padding:24px 20px; }
+
+    .hero h1{ font-size:clamp(36px,13vw,56px); }
+    .heart-badge{ width:38px; height:38px; font-size:14px; top:-8px; }
+    .float-card{ max-width:100%; padding:12px 14px; margin-top:16px; }
+    .float-card .fc-item b{ font-size:12px; }
+    .float-card .fc-item span{ font-size:8.5px; }
+
+    .about-right h2{ font-size:24px; }
+    .gallery-text h2{ font-size:24px; }
+    .gallery-photos{ height:220px; }
+
+    .badges{ gap:14px; }
+    .badge-card{ padding:16px; }
+
+    .foot-bar{ padding:14px 18px; }
+    .foot-bar .center b{ font-size:12px; }
+    .foot-bar .center span{ font-size:9px; }
+    .foot-links{ padding:12px 18px; font-size:10px; }
+  }
+
+  @media (max-width:380px){
+    .hero h1{ font-size:clamp(30px,12vw,42px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- NAV -->
+  <section class="nav">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="logo-slot slot">
+          <img src="logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="slot-fallback" style="display:none;"><b>logo.png</b></div>
+        </div>
+        <b>PT Wilka Agentic</b>
+      </div>
+      <span>Portofolio kerja</span>
+    </div>
+    <div class="nav-center">
+      <div class="nav-links"><span>Karya</span><span>Tentang</span><span>Kontak</span></div>
+      <div class="nav-sub">Kumpulan hasil kerja &amp; keahlian kami</div>
+    </div>
+    <div class="nav-right">
+      <div class="cta-pill">Hubungi <span class="dot">↗</span></div>
+    </div>
+  </section>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="deco-flower">
+      <svg viewBox="0 0 80 80"><g fill="none" stroke="#161412" stroke-width="2" opacity="0.8">
+        <circle cx="40" cy="24" r="10"/><circle cx="40" cy="56" r="10"/>
+        <circle cx="24" cy="40" r="10"/><circle cx="56" cy="40" r="10"/>
+        <circle cx="40" cy="40" r="6" fill="#161412"/>
+      </g></svg>
+    </div>
+    <div class="deco-scribble">
+      <svg viewBox="0 0 80 80"><path d="M10 40 Q20 10 35 30 Q50 55 30 60 Q10 65 40 50 Q65 38 55 20 Q48 8 65 12" fill="none" stroke="#161412" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/></svg>
+    </div>
+    <span class="deco-word script">favorit ✦</span>
+
+    <div class="headline">
+      <h1 class="display">Portfolio</h1>
+      <div class="heart-badge">♥</div>
+    </div>
+
+    <div class="float-card">
+      <div class="fc-item"><b>Desain</b><span>Layanan utama</span></div>
+      <div class="float-toggle"></div>
+      <div class="fc-item" style="text-align:right;"><b>2023</b><span>Update terbaru</span></div>
+    </div>
+  </section>
+
+  <!-- ABOUT / PROFILE -->
+  <section class="about">
+    <div class="profile-card">
+      <div class="profile-photo slot">
+        <img src="profile.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="slot-fallback" style="display:none;"><b>profile.jpg</b>foto profil kamu<br>taruh sejajar index.html</div>
+      </div>
+      <div class="profile-meta">
+        <div class="name">[Nama Kamu]</div>
+        <div class="role">[Peran / Bidang keahlian]</div>
+        <div class="profile-btns">
+          <div class="btn">Karya</div>
+          <div class="btn solid">Kontak</div>
+        </div>
+        <div class="profile-stats"><span>📍 [Kota]</span><span>[X] Tahun Pengalaman</span></div>
+      </div>
+    </div>
+
+    <div class="about-right">
+      <h2 class="display">Tentang Saya</h2>
+      <p>Tulis cerita singkat tentang diri kamu di sini — latar belakang, apa yang kamu kerjakan, dan kenapa orang harus percaya sama hasil kerja kamu.</p>
+      <div class="highlight-box">
+        <div class="hb-top"><div class="hb-icon"></div><b>Keahlian</b></div>
+        <p>Jelaskan singkat skill utama kamu: software yang dikuasai, jenis project yang biasa dikerjakan, atau spesialisasi kamu.</p>
+        <div class="icon-row"><span>🎨</span><span>🎬</span><span>📷</span><span>💻</span><span>📈</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <div class="gallery-photos">
+      <div class="g-photo g1 slot">
+        <img src="gallery-1.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="slot-fallback" style="display:none;"><b>gallery-1.jpg</b></div>
+      </div>
+      <div class="g-photo g2 slot">
+        <img src="gallery-2.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="slot-fallback" style="display:none;"><b>gallery-2.jpg</b></div>
+      </div>
+      <div class="g-close">✕</div>
+      <div class="g-bubble">💬</div>
+    </div>
+    <div class="gallery-text">
+      <span class="script">karya favorit</span>
+      <h2 class="display">[Nama Project]</h2>
+      <p>Ceritakan project andalan kamu di sini — apa yang dikerjakan, tools yang dipakai, atau hasil yang dicapai.</p>
+      <div class="since-pill">Berkarya sejak 2020</div>
+      <div class="contact-mini">
+        <b>Hubungi saya</b>
+        [nomor WhatsApp] · [@akun_instagram]
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section class="badges">
+    <div class="badge-card">
+      <div class="badge-icon">✓</div>
+      <b>Kerja Rapi</b>
+      <p>Setiap project dikerjakan dengan detail dan hasil yang konsisten.</p>
+    </div>
+    <div class="badge-card">
+      <div class="badge-icon">⚡</div>
+      <b>Respon Cepat</b>
+      <p>Fast response untuk diskusi project dan revisi.</p>
+    </div>
+    <div class="badge-card">
+      <div class="badge-icon">★</div>
+      <b>Dipercaya Klien</b>
+      <p>Sudah membantu banyak klien menyelesaikan project mereka.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="foot-bar">
+    <div class="up-btn">↑</div>
+    <div class="center"><b>Portofolio : PT Wilka Agentic</b><span>Lihat semua karya kami selengkapnya</span></div>
+    <div class="dot2"></div>
+  </div>
+  <div class="foot-links">
+    <span>[@akun_instagram]</span>
+    <span>Lihat semua karya →</span>
+  </div>
+
+</div>
+
+</body>
+</html>
