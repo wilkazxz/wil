@@ -243,6 +243,33 @@
     .more-work-head h2{ font-size:22px; }
   }
 
+  /* ---------- BITCOIN LIVE CHART ---------- */
+  .btc-head{ text-align:center; margin-bottom:24px; }
+  .btc-head .script{ font-size:20px; color:var(--red); display:block; margin-bottom:4px; }
+  .btc-head h2{ font-size:30px; margin:0; }
+  .btc-card{
+    background:var(--card); border-radius:18px; padding:26px 28px; box-shadow:0 14px 30px rgba(0,0,0,0.1);
+    max-width:640px; margin:0 auto;
+  }
+  .btc-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px; }
+  .btc-price-wrap{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .btc-price{ font-family:'Archivo Black',sans-serif; font-size:clamp(24px,5vw,34px); }
+  .btc-change{
+    display:inline-flex; align-items:center; gap:4px; font-size:13px; font-weight:700;
+    padding:4px 10px; border-radius:999px;
+  }
+  .btc-change.up{ color:#1f9d55; background:rgba(31,157,85,0.12); }
+  .btc-change.down{ color:var(--red); background:rgba(185,46,46,0.12); }
+  .btc-change svg{ width:12px; height:12px; }
+  .btc-updated{ font-size:10.5px; color:var(--ink-soft); }
+  .btc-chart-wrap{ width:100%; height:120px; }
+  .btc-chart-wrap svg{ width:100%; height:100%; display:block; }
+  .btc-status{ font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:10px; }
+  @media (max-width:680px){
+    .btc-card{ padding:20px 18px; }
+    .btc-head h2{ font-size:22px; }
+  }
+
   /* ---------- ANIMASI SCROLL & MASUK ---------- */
   .reveal{
     opacity:0; transform:translateY(20px);
@@ -359,6 +386,20 @@
   .splash.open .splash-panel.right{ transform:translateX(100%) scale(1.04); }
   .splash.done{ display:none; }
 
+  /* benang jaring laba-laba yang molor mengikuti panel saat kebuka */
+  .splash-web{
+    position:fixed; inset:0; z-index:302; pointer-events:none;
+    opacity:0; transition:opacity 0.2s ease;
+  }
+  .splash.open .splash-web{ opacity:1; }
+  .strand{
+    position:absolute; left:50%; top:50%; height:1.6px; width:5px;
+    background:linear-gradient(90deg, transparent, var(--red) 18%, var(--red) 82%, transparent);
+    box-shadow:0 0 7px rgba(185,46,46,0.65);
+    transform:translate(-50%,-50%) scaleX(1);
+    transform-origin:center; border-radius:2px;
+  }
+
   .splash-content{
     position:fixed; inset:0; z-index:301;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
@@ -418,6 +459,9 @@
 <div class="splash" id="splash">
   <div class="splash-panel left"></div>
   <div class="splash-panel right"></div>
+
+  <div class="splash-web" id="splashWeb"></div>
+
   <div class="splash-content">
     <div class="splash-logo">
       <img src="logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -594,6 +638,29 @@
     </div>
   </section>
 
+  <!-- BITCOIN LIVE CHART -->
+  <section class="reveal">
+    <div class="btc-head">
+      <span class="script">data realtime</span>
+      <h2 class="display">Harga Bitcoin</h2>
+    </div>
+    <div class="btc-card">
+      <div class="btc-top">
+        <div class="btc-price-wrap">
+          <span class="btc-price" id="btcPrice">Memuat…</span>
+          <span class="btc-change" id="btcChange"></span>
+        </div>
+        <span class="btc-updated" id="btcUpdated"></span>
+      </div>
+      <div class="btc-chart-wrap">
+        <svg id="btcChartSvg" viewBox="0 0 600 120" preserveAspectRatio="none">
+          <polyline id="btcChartLine" fill="none" stroke="var(--red)" stroke-width="2" points=""/>
+        </svg>
+      </div>
+      <div class="btc-status" id="btcStatus">Menghubungkan ke data pasar…</div>
+    </div>
+  </section>
+
   <!-- BADGES -->
   <section class="badges reveal reveal-stagger">
     <div class="badge-card">
@@ -645,18 +712,67 @@
 <script>
   (function(){
     var splash = document.getElementById('splash');
+    var webWrap = document.getElementById('splashWeb');
     if(!splash) return;
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(reduced){ splash.classList.add('done'); return; }
 
     document.body.classList.add('splash-lock');
 
+    /* siapkan benang jaring laba-laba (dibangun random tiap load biar terasa organik) */
+    var strandCount = 11;
+    var strands = [];
+    if(webWrap){
+      for(var i=0;i<strandCount;i++){
+        var el = document.createElement('div');
+        el.className = 'strand';
+        var topPct = 8 + (i * (84/(strandCount-1))) + (Math.random()*4 - 2);
+        var skew = (Math.random()*10 - 5);
+        var baseW = 4 + Math.random()*4;
+        el.style.top = topPct + '%';
+        el.style.width = baseW + 'px';
+        el.dataset.baseW = baseW;
+        el.dataset.skew = skew;
+        webWrap.appendChild(el);
+        strands.push({ el: el, baseW: baseW, skew: skew, snapAt: 0.5 + Math.random()*0.35 });
+      }
+    }
+
+    var PANEL_DURATION = 1050; /* samain sama durasi transisi .splash-panel di CSS */
+
+    function easeOutQuart(t){ return 1 - Math.pow(1-t, 4); }
+
+    function animateWeb(){
+      if(!strands.length) return;
+      var start = null;
+      var targetScale = (window.innerWidth * 0.62) / 4; /* seberapa jauh benang molor */
+      function frame(ts){
+        if(start === null) start = ts;
+        var t = Math.min((ts - start) / PANEL_DURATION, 1);
+        var eased = easeOutQuart(t);
+        strands.forEach(function(s){
+          var scaleTarget = 1 + (targetScale / s.baseW - 1) * eased;
+          var op = 1;
+          if(t > s.snapAt){
+            op = Math.max(0, 1 - (t - s.snapAt) / (1 - s.snapAt));
+          }
+          s.el.style.opacity = op;
+          s.el.style.transform = 'translate(-50%,-50%) rotate(' + s.skew + 'deg) scaleX(' + scaleTarget + ')';
+        });
+        if(t < 1){ requestAnimationFrame(frame); }
+      }
+      requestAnimationFrame(frame);
+    }
+
     setTimeout(function(){ splash.classList.add('hide-text'); }, 1900);
-    setTimeout(function(){ splash.classList.add('open'); }, 2250);
+    setTimeout(function(){
+      splash.classList.add('open');
+      animateWeb();
+    }, 2300);
     setTimeout(function(){
       splash.classList.add('done');
       document.body.classList.remove('splash-lock');
-    }, 3300);
+    }, 3450);
   })();
 </script>
 
@@ -681,6 +797,77 @@
 
     /* jaring pengaman: pastikan tidak ada konten yang nyangkut transparan */
     window.setTimeout(showAll, 1200);
+  })();
+</script>
+
+<script>
+  (function(){
+    var elPrice = document.getElementById('btcPrice');
+    var elChange = document.getElementById('btcChange');
+    var elUpdated = document.getElementById('btcUpdated');
+    var elLine = document.getElementById('btcChartLine');
+    var elStatus = document.getElementById('btcStatus');
+    if(!elPrice) return;
+
+    var fmtUSD = function(n){
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    };
+    var fmtTime = function(){
+      var d = new Date();
+      return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    };
+
+    function renderChange(pct){
+      var up = pct >= 0;
+      elChange.className = 'btc-change ' + (up ? 'up' : 'down');
+      var arrow = up
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>';
+      elChange.innerHTML = arrow + '<span>' + (up ? '+' : '') + pct.toFixed(2) + '%</span>';
+    }
+
+    function fetchPrice(){
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true')
+        .then(function(res){ if(!res.ok) throw new Error('gagal'); return res.json(); })
+        .then(function(data){
+          var price = data.bitcoin.usd;
+          var change = data.bitcoin.usd_24h_change;
+          elPrice.textContent = fmtUSD(price);
+          renderChange(change);
+          elUpdated.textContent = 'Update ' + fmtTime();
+          elStatus.textContent = 'Live · sumber: CoinGecko · 24 jam terakhir';
+        })
+        .catch(function(){
+          elStatus.textContent = 'Data sedang tidak bisa dimuat, coba lagi sebentar lagi.';
+        });
+    }
+
+    function fetchChart(){
+      fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1')
+        .then(function(res){ if(!res.ok) throw new Error('gagal'); return res.json(); })
+        .then(function(data){
+          var prices = data.prices.map(function(p){ return p[1]; });
+          if(!prices.length) return;
+          var min = Math.min.apply(null, prices);
+          var max = Math.max.apply(null, prices);
+          var range = (max - min) || 1;
+          var w = 600, h = 120, pad = 6;
+          var pts = prices.map(function(p, i){
+            var x = (i / (prices.length - 1)) * w;
+            var y = h - pad - ((p - min) / range) * (h - pad * 2);
+            return x.toFixed(1) + ',' + y.toFixed(1);
+          }).join(' ');
+          elLine.setAttribute('points', pts);
+          var trendUp = prices[prices.length - 1] >= prices[0];
+          elLine.setAttribute('stroke', trendUp ? '#1f9d55' : 'var(--red)');
+        })
+        .catch(function(){ /* chart opsional, diamkan kalau gagal */ });
+    }
+
+    fetchPrice();
+    fetchChart();
+    setInterval(fetchPrice, 45000);
+    setInterval(fetchChart, 5 * 60000);
   })();
 </script>
 
