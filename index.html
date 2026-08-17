@@ -338,9 +338,49 @@
     .more-photo.slot{ transition:none; }
     .fab-wa::before{ animation:none; }
   }
+
+  /* ---------- SPLASH SCREEN (ANIMASI PEMBUKA) ---------- */
+  .splash{
+    position:fixed; inset:0; z-index:200;
+    background:var(--paper);
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    transition:opacity 0.7s ease, visibility 0.7s ease;
+  }
+  .splash.is-hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  .splash-sub{
+    font-family:'Caveat', cursive; font-weight:700; font-size:22px; color:var(--red);
+    opacity:0; animation:splashFade 0.6s ease forwards; animation-delay:0.15s;
+  }
+  .splash-title{
+    font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.01em;
+    font-size:clamp(26px,6vw,46px); color:var(--ink); text-align:center; margin-top:6px;
+    opacity:0; animation:splashMove 1.5s cubic-bezier(.16,.8,.24,1) forwards; animation-delay:0.35s;
+  }
+  .splash-dot{
+    width:8px; height:8px; border-radius:50%; background:var(--red); margin-top:22px;
+    opacity:0; animation:splashFade 0.5s ease forwards; animation-delay:1.6s;
+  }
+  @keyframes splashFade{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes splashMove{
+    0%{ transform:translateY(-70px); opacity:0; }
+    28%{ transform:translateY(8px); opacity:1; }
+    52%{ transform:translateX(-16px); opacity:1; }
+    76%{ transform:translateX(16px); opacity:1; }
+    100%{ transform:translate(0,0); opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .splash{ transition:none; }
+    .splash-sub, .splash-title, .splash-dot{ animation:none !important; opacity:1 !important; transform:none !important; }
+  }
 </style>
 </head>
 <body>
+
+<div class="splash" id="splash">
+  <span class="splash-sub">Selamat datang di</span>
+  <span class="splash-title">PT Wilka Agentic</span>
+  <span class="splash-dot"></span>
+</div>
 
 <div class="frame">
 
@@ -553,6 +593,23 @@
     document.documentElement.setAttribute('data-theme', next);
     try{ localStorage.setItem('wilka-theme', next); }catch(e){}
   });
+</script>
+
+<script>
+  (function(){
+    var splash = document.getElementById('splash');
+    if(!splash) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var delay = reduced ? 300 : 2100;
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){
+      splash.classList.add('is-hidden');
+      document.body.style.overflow = '';
+      splash.addEventListener('transitionend', function(){
+        splash.style.display = 'none';
+      }, { once:true });
+    }, delay);
+  })();
 </script>
 
 <script>
