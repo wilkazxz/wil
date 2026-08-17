@@ -244,30 +244,30 @@
   }
 
   /* ---------- BITCOIN LIVE CHART ---------- */
-  .btc-head{ text-align:center; margin-bottom:24px; }
-  .btc-head .script{ font-size:20px; color:var(--red); display:block; margin-bottom:4px; }
-  .btc-head h2{ font-size:30px; margin:0; }
-  .btc-card{
+  .market-head{ text-align:center; margin-bottom:24px; }
+  .market-head .script{ font-size:20px; color:var(--red); display:block; margin-bottom:4px; }
+  .market-head h2{ font-size:30px; margin:0; }
+  .market-card{
     background:var(--card); border-radius:18px; padding:26px 28px; box-shadow:0 14px 30px rgba(0,0,0,0.1);
     max-width:640px; margin:0 auto;
   }
-  .btc-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px; }
-  .btc-price-wrap{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-  .btc-price{ font-family:'Archivo Black',sans-serif; font-size:clamp(24px,5vw,34px); }
-  .btc-change{
+  .market-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px; }
+  .market-price-wrap{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .market-price{ font-family:'Archivo Black',sans-serif; font-size:clamp(24px,5vw,34px); }
+  .market-change{
     display:inline-flex; align-items:center; gap:4px; font-size:13px; font-weight:700;
     padding:4px 10px; border-radius:999px;
   }
-  .btc-change.up{ color:#1f9d55; background:rgba(31,157,85,0.12); }
-  .btc-change.down{ color:var(--red); background:rgba(185,46,46,0.12); }
-  .btc-change svg{ width:12px; height:12px; }
-  .btc-updated{ font-size:10.5px; color:var(--ink-soft); }
-  .btc-chart-wrap{ width:100%; height:120px; }
-  .btc-chart-wrap svg{ width:100%; height:100%; display:block; }
-  .btc-status{ font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:10px; }
+  .market-change.up{ color:#1f9d55; background:rgba(31,157,85,0.12); }
+  .market-change.down{ color:var(--red); background:rgba(185,46,46,0.12); }
+  .market-change svg{ width:12px; height:12px; }
+  .market-updated{ font-size:10.5px; color:var(--ink-soft); }
+  .market-chart-wrap{ width:100%; height:120px; }
+  .market-chart-wrap svg{ width:100%; height:100%; display:block; }
+  .market-status{ font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:10px; }
   @media (max-width:680px){
-    .btc-card{ padding:20px 18px; }
-    .btc-head h2{ font-size:22px; }
+    .market-card{ padding:20px 18px; }
+    .market-head h2{ font-size:22px; }
   }
 
   /* ---------- ANIMASI SCROLL & MASUK ---------- */
@@ -640,24 +640,47 @@
 
   <!-- BITCOIN LIVE CHART -->
   <section class="reveal">
-    <div class="btc-head">
+    <div class="market-head">
       <span class="script">data realtime</span>
       <h2 class="display">Harga Bitcoin</h2>
     </div>
-    <div class="btc-card">
-      <div class="btc-top">
-        <div class="btc-price-wrap">
-          <span class="btc-price" id="btcPrice">Memuat…</span>
-          <span class="btc-change" id="btcChange"></span>
+    <div class="market-card">
+      <div class="market-top">
+        <div class="market-price-wrap">
+          <span class="market-price" id="btcPrice">Memuat…</span>
+          <span class="market-change" id="btcChange"></span>
         </div>
-        <span class="btc-updated" id="btcUpdated"></span>
+        <span class="market-updated" id="btcUpdated"></span>
       </div>
-      <div class="btc-chart-wrap">
+      <div class="market-chart-wrap">
         <svg id="btcChartSvg" viewBox="0 0 600 120" preserveAspectRatio="none">
           <polyline id="btcChartLine" fill="none" stroke="var(--red)" stroke-width="2" points=""/>
         </svg>
       </div>
-      <div class="btc-status" id="btcStatus">Menghubungkan ke data pasar…</div>
+      <div class="market-status" id="btcStatus">Menghubungkan ke data pasar…</div>
+    </div>
+  </section>
+
+  <!-- IHSG LIVE CHART -->
+  <section class="reveal">
+    <div class="market-head">
+      <span class="script">data realtime</span>
+      <h2 class="display">Indeks IHSG</h2>
+    </div>
+    <div class="market-card">
+      <div class="market-top">
+        <div class="market-price-wrap">
+          <span class="market-price" id="ihsgPrice">Memuat…</span>
+          <span class="market-change" id="ihsgChange"></span>
+        </div>
+        <span class="market-updated" id="ihsgUpdated"></span>
+      </div>
+      <div class="market-chart-wrap">
+        <svg id="ihsgChartSvg" viewBox="0 0 600 120" preserveAspectRatio="none">
+          <polyline id="ihsgChartLine" fill="none" stroke="var(--red)" stroke-width="2" points=""/>
+        </svg>
+      </div>
+      <div class="market-status" id="ihsgStatus">Menghubungkan ke data pasar…</div>
     </div>
   </section>
 
@@ -868,6 +891,73 @@
     fetchChart();
     setInterval(fetchPrice, 45000);
     setInterval(fetchChart, 5 * 60000);
+  })();
+</script>
+
+<script>
+  (function(){
+    var elPrice = document.getElementById('ihsgPrice');
+    var elChange = document.getElementById('ihsgChange');
+    var elUpdated = document.getElementById('ihsgUpdated');
+    var elLine = document.getElementById('ihsgChartLine');
+    var elStatus = document.getElementById('ihsgStatus');
+    if(!elPrice) return;
+
+    var fmtIdx = function(n){
+      return n.toLocaleString('id-ID', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    };
+    var fmtTime = function(){
+      var d = new Date();
+      return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    };
+
+    function renderChange(pct){
+      var up = pct >= 0;
+      elChange.className = 'market-change ' + (up ? 'up' : 'down');
+      var arrow = up
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>';
+      elChange.innerHTML = arrow + '<span>' + (up ? '+' : '') + pct.toFixed(2) + '%</span>';
+    }
+
+    function fetchIhsg(){
+      fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5EJKSE?interval=5m&range=1d')
+        .then(function(res){ if(!res.ok) throw new Error('gagal'); return res.json(); })
+        .then(function(data){
+          var result = data.chart.result[0];
+          var meta = result.meta;
+          var price = meta.regularMarketPrice;
+          var prevClose = meta.previousClose || meta.chartPreviousClose;
+          var change = ((price - prevClose) / prevClose) * 100;
+
+          elPrice.textContent = fmtIdx(price);
+          renderChange(change);
+          elUpdated.textContent = 'Update ' + fmtTime();
+          elStatus.textContent = 'Live · sumber: Bursa Efek Indonesia · sesi hari ini';
+
+          var closes = (result.indicators.quote[0].close || []).filter(function(v){ return v !== null; });
+          if(closes.length > 1){
+            var min = Math.min.apply(null, closes);
+            var max = Math.max.apply(null, closes);
+            var range = (max - min) || 1;
+            var w = 600, h = 120, pad = 6;
+            var pts = closes.map(function(p, i){
+              var x = (i / (closes.length - 1)) * w;
+              var y = h - pad - ((p - min) / range) * (h - pad * 2);
+              return x.toFixed(1) + ',' + y.toFixed(1);
+            }).join(' ');
+            elLine.setAttribute('points', pts);
+            var trendUp = closes[closes.length - 1] >= closes[0];
+            elLine.setAttribute('stroke', trendUp ? '#1f9d55' : 'var(--red)');
+          }
+        })
+        .catch(function(){
+          elStatus.textContent = 'Data IHSG sedang tidak bisa dimuat (di luar jam bursa atau koneksi bermasalah).';
+        });
+    }
+
+    fetchIhsg();
+    setInterval(fetchIhsg, 60000);
   })();
 </script>
 
