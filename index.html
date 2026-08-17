@@ -131,6 +131,8 @@
   .float-toggle::after{ content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:var(--card); }
 
   .deco-flower{ position:absolute; left:6%; top:52%; width:70px; opacity:0.75; }
+  .deco-flower svg{ animation:spinFlower 14s linear infinite; transform-origin:50% 50%; display:block; }
+  @keyframes spinFlower{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
   .deco-scribble{ position:absolute; right:8%; top:36%; width:80px; opacity:0.8; }
   .deco-word{ position:absolute; right:6%; top:58%; font-size:24px; color:var(--ink-soft); transform:rotate(-6deg); }
 
@@ -266,7 +268,7 @@
   .header-photo-wrap{ position:relative; overflow:hidden; }
   .header-bg{ position:absolute; inset:0; z-index:0; }
   .header-bg img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .header-bg .overlay{ position:absolute; inset:0; background:var(--paper); opacity:0.14; }
+  .header-bg .overlay{ position:absolute; inset:0; background:var(--paper); opacity:0.34; }
   .header-photo-wrap .nav, .header-photo-wrap .hero{ position:relative; z-index:1; }
   .header-photo-wrap .hero h1{ text-shadow:0 2px 18px rgba(0,0,0,0.08); }
 
@@ -332,6 +334,7 @@
     html{ scroll-behavior:auto; }
     .reveal, .reveal-stagger > *{ opacity:1 !important; transform:none !important; transition:none !important; }
     .hero .deco-flower, .hero .deco-scribble, .hero .deco-word, .hero .headline, .hero .float-card{ animation:none !important; }
+    .deco-flower svg{ animation:none !important; }
     .more-photo.slot{ transition:none; }
     .fab-wa::before{ animation:none; }
   }
